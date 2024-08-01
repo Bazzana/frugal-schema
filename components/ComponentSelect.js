@@ -12,9 +12,14 @@ import {
 // Context: https://www.storyblok.com/docs/api/management/core-resources/components/possible-field-types
 const componentTypes = ['bloks','text','textarea','richtext','markdown','number','datetime','boolean','option','options','asset','multiasset','multilink','table','section','custom','image','file'];
 
-export function ComponentSelect() {
+export function ComponentSelect({ onChange }) {
+
+    const handleChange = (value) => {
+      onChange(value);
+    };
+
   return (
-    <Select>
+    <Select onValueChange={handleChange}>
     <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Add a component" />
     </SelectTrigger>
