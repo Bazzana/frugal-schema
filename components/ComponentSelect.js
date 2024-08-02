@@ -40,8 +40,7 @@ export function ComponentSelect({ onChange, deleteComponent}) {
     };
 
   return (
-    <div className="flex gap-4">
-      {componentName}
+    <div className="flex gap-4 justify-between mb-4 bg-background">
       <div className="flex gap-4 flex-col">
       <Label htmlFor="Component Name">Component Name</Label>
         <Input 
