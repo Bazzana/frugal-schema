@@ -15,23 +15,34 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
+interface Component {
+  id: number;
+  componentName: string;
+  componentType: string;
+}
+
 export default function Home() {
   // Initialize state with an empty array for component values
-  const [componentList, setComponentList] = useState([]);
+  const [componentList, setComponentList] = useState<Component[]>([]);
+  const [nextId, setNextId] = useState(0);
 
   const addComponent = () => {
-    setComponentList([...componentList, '']);
+    setComponentList([
+      ...componentList,
+      { id: nextId, componentName: '', componentType: '' }
+    ]);
+    setNextId(nextId + 1); // Increment ID for next component
   };
 
-  const removeComponent = (index: number) => {
-    setComponentList(componentList.filter((_, i) => i !== index));
+  const removeComponent = (id: number) => {
+    setComponentList(componentList.filter(component => component.id !== id));
   };
 
   // Function to update a specific component's value in the list
-  const updateComponent = (index:number, value:string[]) => {
-    const updatedList = [...componentList];
-    updatedList[index] = value;
-    setComponentList(updatedList);
+  const updateComponent = (id: number, updatedComponent: Omit<Component, 'id'>) => {
+    setComponentList(componentList.map(component =>
+      component.id === id ? { ...component, ...updatedComponent } : component
+    ));
   };
 
   return (
@@ -43,14 +54,14 @@ export default function Home() {
           <CardDescription>Begin by adding a component</CardDescription>
         </CardHeader>
         <CardContent>
-        {componentList.map((value:string, index:number) => (
-              <ComponentSelect
-                key={index}
-                onChange={(newValue: string[]) => updateComponent(index, newValue)}
-                deleteComponent={(newValue: string[]) => removeComponent(index)}
-                className="mb-4"
-              />
-            ))}
+          {componentList.map(component => (
+            <ComponentSelect
+              key={component.id} // Use unique ID
+              component={component}
+              onChange={(updatedComponent) => updateComponent(component.id, updatedComponent)}
+              deleteComponent={() => removeComponent(component.id)}
+            />
+          ))}
         </CardContent>
         <CardFooter className="flex flex-col">
         <Button onClick={addComponent} disabled={false} buttonText="Add Component" />

@@ -1,7 +1,6 @@
 'use client'
 import * as React from "react"
 import { useState, useEffect } from 'react';
-
 import {
   Select,
   SelectContent,
@@ -9,19 +8,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-
 import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
 
 import DeleteButton from "./DeleteButton.js";
-import { Input } from "@/components/ui/input"
 
 // Hardcoded list of defined component types
 // Context: https://www.storyblok.com/docs/api/management/core-resources/components/possible-field-types
 const componentTypes = ['bloks','text','textarea','richtext','markdown','number','datetime','boolean','option','options','asset','multiasset','multilink','table','section','custom','image','file'];
 
-export function ComponentSelect({ onChange, deleteComponent}) {
-    let [componentName, setComponentName] = useState('');
-    let [componentType, setComponentType] = useState('');
+export function ComponentSelect({ component, onChange, deleteComponent }) {
+  const [componentName, setComponentName] = useState(component.componentName);
+  const [componentType, setComponentType] = useState(component.componentType);
+
+    useEffect(() => {
+      setComponentName(component.componentName);
+      setComponentType(component.componentType);
+    }, [component]);
 
     useEffect(() => {
       onChange({componentName, componentType});
@@ -46,10 +49,12 @@ export function ComponentSelect({ onChange, deleteComponent}) {
         <Input 
         name="Component Name"
         required
+        value={componentName}
         onChange={(e) => handleInputChange(e.target.value)}  // Update local state on input change
         />
         <Label htmlFor="Component Type">Component Type</Label>
-        <Select className="flex-grow" name="Component Type" onValueChange={(value) => {
+        <Select className="flex-grow" name="Component Type" value={componentType}
+        onChange={(value) => {
           handleSelectChange(value);  // Handle change to notify parent
         }}>
         <SelectTrigger>
