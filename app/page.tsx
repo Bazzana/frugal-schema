@@ -14,9 +14,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
 
 interface Component {
-  id: number;
+  id?: number;
   componentName: string;
   componentType: string;
 }
@@ -25,6 +27,7 @@ export default function Home() {
   // Initialize state with an empty array for component values
   const [componentList, setComponentList] = useState<Component[]>([]);
   const [nextId, setNextId] = useState(0);
+  const [blokName, setBlokName] = useState('');
 
   const addComponent = () => {
     setComponentList([
@@ -45,15 +48,36 @@ export default function Home() {
     ));
   };
 
+  const canRenderJSON = () => {
+    return componentList.length == 0 ? true : false
+  }
+
+  const JSONify = () => {
+    let componentListReflection = componentList
+    componentListReflection.forEach((e) => {
+      delete e.id
+    })
+    return JSON.stringify(componentListReflection);
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-24">
       <DescriptionDialog />
       <Card>
         <CardHeader>
           <CardTitle>Storyblok Schema Generator</CardTitle>
-          <CardDescription>Begin by adding a component</CardDescription>
+          <CardDescription>Begin by setting a Block name</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="py-4 px-0">
+          <div className="py-4 px-4">
+            <Label htmlFor="Component Type">Block Name</Label>
+            <Input 
+            name="Blok Name"
+            required
+            value={blokName}
+            onChange={(e) => setBlokName(e.target.value)}  // Update local state on input change
+            />
+          </div>
           {componentList.map(component => (
             <ComponentSelect
               key={component.id} // Use unique ID
@@ -63,13 +87,15 @@ export default function Home() {
             />
           ))}
         </CardContent>
-        <CardFooter className="flex flex-col">
-        <Button onClick={addComponent} disabled={false} buttonText="Add Component" />
-            {componentList.map((value:string, index:number) => (
-              <div className="block">{value.componentName}, {value.componentType}</div>
-            ))}
+        <CardFooter className="flex flex-row justify-between gap-4">
+          <Button onClick={addComponent} disabled={false} buttonText="Add Component" />
+          <Button disabled={canRenderJSON()} buttonText="Render JSON" />
         </CardFooter>
       </Card>
+      <div>Block Name: {blokName} </div>
+      <div className="border px-2 py-2 rounded-lg">Block Components:
+        {JSONify()}
+      </div>
     </main>
   );
 }
