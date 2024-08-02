@@ -10,6 +10,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
+import { Label } from "@/components/ui/label"
+
 import DeleteButton from "./DeleteButton.js";
 import { Input } from "@/components/ui/input"
 
@@ -38,14 +40,17 @@ export function ComponentSelect({ onChange, deleteComponent}) {
     };
 
   return (
-    <div className="">
+    <div className="flex gap-4">
       {componentName}
-      <div className="flex gap-4">
+      <div className="flex gap-4 flex-col">
+      <Label htmlFor="Component Name">Component Name</Label>
         <Input 
+        name="Component Name"
         required
         onChange={(e) => handleInputChange(e.target.value)}  // Update local state on input change
         />
-        <Select className="flex-grow" onValueChange={(value) => {
+        <Label htmlFor="Component Type">Component Type</Label>
+        <Select className="flex-grow" name="Component Type" onValueChange={(value) => {
           handleSelectChange(value);  // Handle change to notify parent
         }}>
         <SelectTrigger>
@@ -57,8 +62,8 @@ export function ComponentSelect({ onChange, deleteComponent}) {
           })}
         </SelectContent>
         </Select>
-        <DeleteButton onClick={removeComponent}/>
       </div>
+      <DeleteButton onClick={removeComponent}/>
     </div>
   )
 }
