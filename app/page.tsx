@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import ComponentSelect from "../components/ComponentSelect.js";
 import Button from "../components/GenericButton.js";
+import DescriptionDialog from "../components/DescriptionDialog.js";
 
 import {
   Card,
@@ -35,6 +36,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-24">
+      <DescriptionDialog />
       <Card>
         <CardHeader>
           <CardTitle>Storyblok Schema Generator</CardTitle>
