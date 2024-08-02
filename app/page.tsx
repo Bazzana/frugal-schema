@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import ComponentSelect from "../components/ComponentSelect.js";
-import Button from "../components/Button.js";
+import Button from "../components/GenericButton.js";
 
 export default function Home() {
   // Initialize state with an empty array for component values
@@ -11,6 +11,10 @@ export default function Home() {
 
   const addComponent = () => {
     setComponentList([...componentList, '']);
+  };
+
+  const removeComponent = (index: number) => {
+    setComponentList(componentList.filter((_, i) => i !== index));
   };
 
   // Function to update a specific component's value in the list
@@ -26,9 +30,12 @@ export default function Home() {
       {componentList.map((value:string, index:number) => (
         <ComponentSelect
           key={index}
-          onChange={(newValue: string) => updateComponent(index, newValue)} value={undefined}        />
+          onChange={(newValue: string) => updateComponent(index, newValue)}
+          deleteComponent={(newValue: string) => removeComponent(index, newValue)}
+          value={undefined}          
+        />
       ))}
-      <Button onClick={addComponent} />
+      <Button onClick={addComponent} disabled={false} buttonText="Add Component" />
     </main>
   );
 }
