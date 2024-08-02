@@ -7,7 +7,7 @@ import Button from "../components/GenericButton.js";
 
 export default function Home() {
   // Initialize state with an empty array for component values
-  const [componentList, setComponentList] = useState(['']);
+  const [componentList, setComponentList] = useState([]);
 
   const addComponent = () => {
     setComponentList([...componentList, '']);
@@ -18,7 +18,7 @@ export default function Home() {
   };
 
   // Function to update a specific component's value in the list
-  const updateComponent = (index:number, value:string) => {
+  const updateComponent = (index:number, value:string[]) => {
     const updatedList = [...componentList];
     updatedList[index] = value;
     setComponentList(updatedList);
@@ -26,16 +26,17 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-24">
-      {componentList}
       {componentList.map((value:string, index:number) => (
         <ComponentSelect
           key={index}
-          onChange={(newValue: string) => updateComponent(index, newValue)}
-          deleteComponent={(newValue: string) => removeComponent(index, newValue)}
-          value={undefined}          
+          onChange={(newValue: string[]) => updateComponent(index, newValue)}
+          deleteComponent={(newValue: string[]) => removeComponent(index)}
         />
       ))}
       <Button onClick={addComponent} disabled={false} buttonText="Add Component" />
+      {componentList.map((value:string, index:number) => (
+        <div>{value.componentName}, {value.componentType}</div>
+      ))}
     </main>
   );
 }

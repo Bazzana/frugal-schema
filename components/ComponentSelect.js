@@ -1,5 +1,6 @@
+'use client'
 import * as React from "react"
-import { useRef, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import {
   Select,
@@ -17,12 +18,19 @@ import { Input } from "@/components/ui/input"
 const componentTypes = ['bloks','text','textarea','richtext','markdown','number','datetime','boolean','option','options','asset','multiasset','multilink','table','section','custom','image','file'];
 
 export function ComponentSelect({ onChange, deleteComponent}) {
-    let inputRef = useRef({});
     let [componentName, setComponentName] = useState('');
     let [componentType, setComponentType] = useState('');
 
-    const handleChange = (value) => {
-      onChange(componentName,componentType);
+    useEffect(() => {
+      onChange({componentName, componentType});
+    }, [componentName, componentType]);
+
+    const handleSelectChange = (value) => {
+      setComponentType(value);
+    };
+
+    const handleInputChange = (value) => {
+      setComponentName(value);
     };
 
     const removeComponent = () => {
@@ -32,22 +40,20 @@ export function ComponentSelect({ onChange, deleteComponent}) {
   return (
     <div className="">
       {componentName}
-      {componentType}
       <div className="flex gap-4">
         <Input 
         required
-        onChange={(e) => setComponentName(e.target.value)}  // Update local state on input change
+        onChange={(e) => handleInputChange(e.target.value)}  // Update local state on input change
         />
         <Select className="flex-grow" onValueChange={(value) => {
-          setComponentType(value);  // Update local state on select change
-          handleChange(value);  // Handle change to notify parent
+          handleSelectChange(value);  // Handle change to notify parent
         }}>
         <SelectTrigger>
             <SelectValue placeholder="Add a component" />
         </SelectTrigger>
         <SelectContent>
           {componentTypes.map((sbComponent, index) => {
-            return <SelectItem key={sbComponent} value={sbComponent}>{sbComponent}</SelectItem>
+            return <SelectItem key={index} value={sbComponent}>{sbComponent}</SelectItem>
           })}
         </SelectContent>
         </Select>
