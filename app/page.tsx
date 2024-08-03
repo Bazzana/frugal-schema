@@ -5,6 +5,7 @@ import { useState } from "react";
 import ComponentSelect from "../components/ComponentSelect.js";
 import Button from "../components/GenericButton.js";
 import DescriptionDialog from "../components/DescriptionDialog.js";
+import OutputJSON from "../components/OutputJSON.js";
 
 import {
   Card,
@@ -27,7 +28,7 @@ export default function Home() {
   // Initialize state with an empty array for component values
   const [componentList, setComponentList] = useState<Component[]>([]);
   const [nextId, setNextId] = useState(0);
-  const [blokName, setBlokName] = useState('');
+  const [blockName, setblockName] = useState('');
 
   const addComponent = () => {
     setComponentList([
@@ -52,14 +53,6 @@ export default function Home() {
     return componentList.length == 0 ? true : false
   }
 
-  const JSONify = () => {
-    let componentListReflection = componentList
-    componentListReflection.forEach((e) => {
-      delete e.id
-    })
-    return JSON.stringify(componentListReflection);
-  }
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-24">
       <DescriptionDialog />
@@ -74,8 +67,8 @@ export default function Home() {
             <Input 
             name="Blok Name"
             required
-            value={blokName}
-            onChange={(e) => setBlokName(e.target.value)}  // Update local state on input change
+            value={blockName}
+            onChange={(e) => setblockName(e.target.value)}  // Update local state on input change
             />
           </div>
           {componentList.map(component => (
@@ -92,9 +85,9 @@ export default function Home() {
           <Button disabled={canRenderJSON()} buttonText="Render JSON" />
         </CardFooter>
       </Card>
-      <div>Block Name: {blokName} </div>
+      <div>Block Name: {blockName} </div>
       <div className="border px-2 py-2 rounded-lg">Block Components:
-        {JSONify()}
+        <OutputJSON blockName={blockName} component={componentList}/>
       </div>
     </main>
   );
