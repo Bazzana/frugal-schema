@@ -19,16 +19,18 @@ const componentTypes = ['bloks','text','textarea','richtext','markdown','number'
 
 export function ComponentSelect({ component, onChange, deleteComponent }) {
   const [componentName, setComponentName] = useState(component.componentName);
+  const [componentDescription, setComponentDescription] = useState(component.componentDescription);
   const [componentType, setComponentType] = useState(component.componentType);
 
     useEffect(() => {
       setComponentName(component.componentName);
+      setComponentDescription(component.componentDescription);
       setComponentType(component.componentType);
     }, [component]);
 
     useEffect(() => {
-      onChange({componentName, componentType});
-    }, [componentName, componentType]);
+      onChange({componentName, componentDescription, componentType});
+    }, [componentName, componentDescription, componentType]);
 
     const handleSelectChange = (value) => {
       setComponentType(value);
@@ -36,6 +38,10 @@ export function ComponentSelect({ component, onChange, deleteComponent }) {
 
     const handleInputChange = (value) => {
       setComponentName(value);
+    };
+
+    const handleDescriptionChange = (value) => {
+      setComponentDescription(value);
     };
 
     const removeComponent = () => {
@@ -51,6 +57,13 @@ export function ComponentSelect({ component, onChange, deleteComponent }) {
         required
         value={componentName}
         onChange={(e) => handleInputChange(e.target.value)}  // Update local state on input change
+        />
+        <Label htmlFor="Component Type">Component Description</Label>
+        <Input 
+        name="Component Description"
+        required
+        value={componentDescription}
+        onChange={(e) => handleDescriptionChange(e.target.value)}  // Update local state on input change
         />
         <Label htmlFor="Component Type">Component Type</Label>
         <Select className="flex-grow" name="Component Type" value={componentType}

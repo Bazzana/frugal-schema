@@ -22,6 +22,7 @@ interface Component {
   id?: number;
   componentName: string;
   componentType: string;
+  componentDescription: string;
 }
 
 export default function Home() {
@@ -33,7 +34,7 @@ export default function Home() {
   const addComponent = () => {
     setComponentList([
       ...componentList,
-      { id: nextId, componentName: '', componentType: '' }
+      { id: nextId, componentName: '', componentType: '', componentDescription: '' }
     ]);
     setNextId(nextId + 1); // Increment ID for next component
   };

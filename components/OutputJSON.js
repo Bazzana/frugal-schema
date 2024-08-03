@@ -7,9 +7,10 @@ export function GenericButton({blockName, component}) {
 
     component.forEach((e) => {
       storyblokComponent.component.schema[e.componentName] = {"type" : e.componentType}
+      storyblokComponent.component.schema[e.componentName] = {"description" : e.componentDescription}
     })
-    
-    storyblokComponent.component.name = blockName;
+
+    storyblokComponent.component.name = blockName.replace(" ", "_").toLowerCase();
     storyblokComponent.component.display_name = blockName;
 
     return JSON.stringify(storyblokComponent);
