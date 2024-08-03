@@ -43,7 +43,7 @@ export function ComponentSelect({ component, onChange, deleteComponent }) {
     };
 
   return (
-    <div className="border flex gap-4 justify-between mb-4 bg-background border-py-4 relative rounded-lg">
+    <div className="border flex gap-4 justify-between mb-4 bg-background border-py-4 relative -mt-1 -mx-4 shadow-md">
       <div className="flex gap-4 flex-col flex-grow py-4 px-4">
       <Label htmlFor="Component Name">Component Name</Label>
         <Input 
@@ -67,7 +67,7 @@ export function ComponentSelect({ component, onChange, deleteComponent }) {
         </SelectContent>
         </Select>
       </div>
-      <DeleteButton className="flex-shrink" onClick={removeComponent}/>
+      <DeleteButton className="flex-shrink pt-1" onClick={removeComponent}/>
     </div>
   )
 }
