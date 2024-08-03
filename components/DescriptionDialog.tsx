@@ -22,7 +22,7 @@ export function DescriptionDialog({onClick}) {
             <AlertDialogHeader>
             <AlertDialogTitle>What is this?</AlertDialogTitle>
             <AlertDialogDescription>
-                This tool is a way to populate your Storyblok space with Components.
+                This tool is a way to populate your Storyblok space with <a href="https://www.storyblok.com/docs/api/management/core-resources/components/" target="_blank" className="underline">Components.</a>
                 This can be done directly in StoryBlok, but I built this tool as a means to make it slightly less time-consuming when creating new UI elements as I found the UI to be too finicky.
             </AlertDialogDescription>
             </AlertDialogHeader>

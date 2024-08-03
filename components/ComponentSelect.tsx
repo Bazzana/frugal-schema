@@ -81,7 +81,7 @@ export function ComponentSelect({ component, onChange, deleteComponent }) {
             </Select>
           </div>
         </div>
-        <Label htmlFor="Component Description" className="mb-4">Component Description</Label>
+        <Label htmlFor="Component Description">Component Description</Label>
         <Input 
         name="Component Description"
         required
