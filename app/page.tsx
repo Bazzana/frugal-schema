@@ -6,6 +6,7 @@ import ComponentSelect from "../components/ComponentSelect.tsx";
 import Button from "../components/GenericButton.tsx";
 import DescriptionDialog from "../components/DescriptionDialog.tsx";
 import OutputJSON from "../components/OutputJSON.tsx";
+import GenericSelect from "../components/GenericSelect.tsx";
 
 import {
   Card,
@@ -17,6 +18,7 @@ import {
 } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface Component {
   id?: number;
@@ -26,10 +28,16 @@ interface Component {
 }
 
 export default function Home() {
+  const [authToken, setAuthToken] = useState('');
+  const [regionValue, setRegionValue] = useState('');
+  const [existingSpaceComponents, setExistingSpaceComponents] = useState('');
+  const [isLoading, setisLoading] = useState(false);
   // Initialize state with an empty array for component values
   const [componentList, setComponentList] = useState<Component[]>([]);
   const [nextId, setNextId] = useState(0);
-  const [blockName, setblockName] = useState('');
+  const [blockName, setBlockName] = useState('');
+
+  const SBRegions = [{"European Union" : "https://mapi.storyblok.com"},{"United States" : "https://api-us.storyblok.com"},{"Canada" : "https://api-ca.storyblok.com"},{"Australia" : "https://api-ap.storyblok.com"},{"China" : "https://app.storyblokchina.cn"}]
 
   const addComponent = () => {
     setComponentList([
@@ -54,41 +62,81 @@ export default function Home() {
     return componentList.length == 0 ? true : false
   }
 
+  const getComponents = (e) => {
+    setExistingSpaceComponents('yeeto');
+  }
+
   return (
     <main className="container relative flex min-h-screen flex-col items-center justify-center gap-4 p-24">
       <div className="relative grid w-full scroll-m-20 gap-4">
         <div className="flex grow-0">
           <DescriptionDialog />
         </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Storyblok Schema Generator</CardTitle>
-          <CardDescription>Begin by setting a Block name</CardDescription>
-        </CardHeader>
-        <CardContent className="py-4 px-0">
-          <div className="py-4 px-4">
-            <Label htmlFor="Component Type">Block Name</Label>
-            <Input 
-            name="Blok Name"
-            required
-            value={blockName}
-            onChange={(e) => setblockName(e.target.value)}  // Update local state on input change
-            />
-          </div>
-          {componentList.map(component => (
-            <ComponentSelect
-              key={component.id} // Use unique ID
-              component={component}
-              onChange={(updatedComponent) => updateComponent(component.id, updatedComponent)}
-              deleteComponent={() => removeComponent(component.id)}
-            />
-          ))}
-        </CardContent>
-        <CardFooter className="flex flex-row justify-between gap-4">
-          <Button onClick={addComponent} disabled={false} buttonText="Add Component" />
-          <Button disabled={canRenderJSON()} buttonText="Render JSON" />
-        </CardFooter>
-      </Card>
+        <Tabs defaultValue="api" className="">
+          <TabsList>
+            <TabsTrigger value="api">Authorisation</TabsTrigger>
+            <TabsTrigger value="generator">Block Generator</TabsTrigger>
+          </TabsList>
+          <TabsContent value="api">
+          <Card>
+            <CardHeader>
+              <CardTitle>Authorisation</CardTitle>
+              <CardDescription>Select the region your Storyblok space is in, and input your authorisation token</CardDescription>
+            </CardHeader>
+            <CardContent className="py-4 px-0 flex flex-row">
+              <div className="py-4 px-4 w-1/2">
+                <Label htmlFor="Component Type">Authorisation Token</Label>
+                <Input 
+                name="Authorisation Token"
+                required
+                value={authToken}
+                onChange={(e) => setAuthToken(e.target.value)}  // Update local state on input change
+                />
+              </div>
+              <div className="py-4 px-4 w-1/2">
+                <GenericSelect options={SBRegions.map(obj => Object.keys(obj)[0])} label={'StoryBlok Space Region'} onChange={(value) => setRegionValue(value)} />
+              </div>
+            </CardContent>
+            <CardFooter className="flex flex-row justify-between gap-4">
+              <Button onClick={getComponents} disabled={regionValue == "" || authToken == "" || isLoading == true ? true : false} buttonText="Get existing components" />
+            </CardFooter>
+          </Card>
+          </TabsContent>
+          <TabsContent value="generator">
+          <Card>
+            <CardHeader>
+              <CardTitle>Storyblok Schema Generator</CardTitle>
+              <CardDescription>Begin by setting a Block name</CardDescription>
+            </CardHeader>
+            <CardContent className="py-4 px-0">
+              <div className="py-4 px-4">
+                <Label htmlFor="Component Type">Block Name</Label>
+                <Input 
+                name="Blok Name"
+                required
+                value={blockName}
+                onChange={(e) => setBlockName(e.target.value)}  // Update local state on input change
+                />
+              </div>
+              {componentList.map(component => (
+                <ComponentSelect
+                  key={component.id} // Use unique ID
+                  component={component}
+                  onChange={(updatedComponent) => updateComponent(component.id, updatedComponent)}
+                  deleteComponent={() => removeComponent(component.id)}
+                />
+              ))}
+            </CardContent>
+            <CardFooter className="flex flex-row justify-between gap-4">
+              <Button onClick={addComponent} disabled={false} buttonText="Add Component" />
+              <Button disabled={canRenderJSON()} buttonText="Render JSON" />
+            </CardFooter>
+          </Card>
+          </TabsContent>
+        </Tabs>
+      <div>Auth Token: {authToken} </div>
+      <div>Space Region: {regionValue} </div>
+      <div>Existing components: {existingSpaceComponents} </div>
       <div>Block Name: {blockName} </div>
       <div className="border px-2 py-2 rounded-lg">Block Components:
         <OutputJSON blockName={blockName} component={componentList}/>
