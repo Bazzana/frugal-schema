@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 
-import ComponentSelect from "../components/ComponentSelect.js";
-import Button from "../components/GenericButton.js";
-import DescriptionDialog from "../components/DescriptionDialog.js";
-import OutputJSON from "../components/OutputJSON.js";
+import ComponentSelect from "../components/ComponentSelect.tsx";
+import Button from "../components/GenericButton.tsx";
+import DescriptionDialog from "../components/DescriptionDialog.tsx";
+import OutputJSON from "../components/OutputJSON.tsx";
 
 import {
   Card,
@@ -55,8 +55,11 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-24">
-      <DescriptionDialog />
+    <main className="container relative flex min-h-screen flex-col items-center justify-center gap-4 p-24">
+      <div className="relative grid w-full scroll-m-20 gap-4">
+        <div className="flex grow-0">
+          <DescriptionDialog />
+        </div>
       <Card>
         <CardHeader>
           <CardTitle>Storyblok Schema Generator</CardTitle>
@@ -89,7 +92,7 @@ export default function Home() {
       <div>Block Name: {blockName} </div>
       <div className="border px-2 py-2 rounded-lg">Block Components:
         <OutputJSON blockName={blockName} component={componentList}/>
-      </div>
+      </div></div>
     </main>
   );
 }

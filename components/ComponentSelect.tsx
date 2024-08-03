@@ -11,7 +11,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 
-import DeleteButton from "./DeleteButton.js";
+import DeleteButton from "./DeleteButton.tsx";
 
 // Hardcoded list of defined component types
 // Context: https://www.storyblok.com/docs/api/management/core-resources/components/possible-field-types
@@ -49,38 +49,46 @@ export function ComponentSelect({ component, onChange, deleteComponent }) {
     };
 
   return (
-    <div className="border flex gap-4 justify-between mb-4 bg-background border-py-4 relative -mt-1 -mx-4 shadow-md">
-      <div className="flex gap-4 flex-col flex-grow py-4 px-4">
-      <Label htmlFor="Component Name">Component Name</Label>
-        <Input 
-        name="Component Name"
-        required
-        value={componentName}
-        onChange={(e) => handleInputChange(e.target.value)}  // Update local state on input change
-        />
-        <Label htmlFor="Component Type">Component Description</Label>
+    <div className="border flex flex-col bg-background relative -m-[1px] -mx-[1px] shadow-md justify-end">
+      <div className="flex justify-end">
+        <DeleteButton onClick={removeComponent}/>
+      </div>
+      <div className="flex gap-4 flex-col flex-grow pb-4 px-4">
+        <div className="flex flex-row justify-between gap-4">
+          <div className="flex flex-col basis-1/2">
+            <Label htmlFor="Component Name" className="mb-4">Component Name</Label>
+            <Input 
+            name="Component Name"
+            required
+            value={componentName}
+            onChange={(e) => handleInputChange(e.target.value)}  // Update local state on input change
+            />
+          </div>
+          <div className="flex flex-col basis-1/2">
+            <Label htmlFor="Component Type" className="mb-4">Component Type</Label>
+            <Select className="flex-grow" name="Component Type" value={componentType}
+            onValueChange={(value) => {
+              handleSelectChange(value);  // Handle change to notify parent
+            }}>
+            <SelectTrigger>
+                <SelectValue placeholder="Add a component" />
+            </SelectTrigger>
+            <SelectContent>
+              {componentTypes.map((sbComponent, index) => {
+                return <SelectItem key={index} value={sbComponent}>{sbComponent}</SelectItem>
+              })}
+            </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <Label htmlFor="Component Description" className="mb-4">Component Description</Label>
         <Input 
         name="Component Description"
         required
         value={componentDescription}
         onChange={(e) => handleDescriptionChange(e.target.value)}  // Update local state on input change
         />
-        <Label htmlFor="Component Type">Component Type</Label>
-        <Select className="flex-grow" name="Component Type" value={componentType}
-        onValueChange={(value) => {
-          handleSelectChange(value);  // Handle change to notify parent
-        }}>
-        <SelectTrigger>
-            <SelectValue placeholder="Add a component" />
-        </SelectTrigger>
-        <SelectContent>
-          {componentTypes.map((sbComponent, index) => {
-            return <SelectItem key={index} value={sbComponent}>{sbComponent}</SelectItem>
-          })}
-        </SelectContent>
-        </Select>
       </div>
-      <DeleteButton className="flex-shrink pt-1" onClick={removeComponent}/>
     </div>
   )
 }
