@@ -63,8 +63,38 @@ export default function Home() {
     ));
   };
 
-  const canRenderJSON = () => {
-    return componentList.length == 0 ? true : false
+  const JSONify = (componentList: Component[]) => {
+    let storyblokComponent = {};
+    storyblokComponent.component = {};
+    storyblokComponent.component.name = blockName.replaceAll(" ", "_").toLowerCase();
+    storyblokComponent.component.display_name = blockName;
+    storyblokComponent.component.schema = {};
+
+    componentList.forEach((e) => {
+      const type = {"type" : e.componentType}
+      const desc = {"description" : e.componentDescription}
+      storyblokComponent.component.schema[e.componentName] = {...type, ...desc};
+    })
+
+    return JSON.stringify(storyblokComponent.component);
+
+  }
+
+  const createBlockInSB = (e) => {
+    const StoryblokClient = require('storyblok-js-client')
+    setIsLoading(true);
+    const newComponent = JSONify(componentList);
+    const Storyblok = new StoryblokClient({
+      oauthToken: authToken
+    })
+    Storyblok.post('spaces/'+spaceID+'/components', {
+      component : newComponent 
+    })
+    .then(response => {
+      setExistingSpaceComponents(response.data)
+    }).catch(error => { 
+      console.log(error)
+    })
   }
 
   const getComponents = (e) => {
@@ -153,7 +183,7 @@ export default function Home() {
             </CardContent>
             <CardFooter className="flex flex-row justify-between gap-4">
               <Button onClick={addComponent} disabled={false} buttonText="Add Component" />
-              <Button disabled={canRenderJSON()} buttonText="Render JSON" />
+              <Button onClick={createBlockInSB} buttonText="Create Block" />
             </CardFooter>
           </Card>
           </TabsContent>
@@ -163,7 +193,7 @@ export default function Home() {
       <div>Existing components: {existingSpaceComponents.length > 0 ? existingSpaceComponents.map(obj => Object.values(obj)[0] + ", ") : 'None found'} </div>
       <div>Block Name: {blockName == "" ? 'Null' : blockName} </div>
       <div className="border px-2 py-2 rounded-lg">Block Components:
-        <OutputJSON blockName={blockName} component={componentList}/>
+        {JSONify(componentList)}
       </div></div>
     </main>
   );
