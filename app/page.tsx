@@ -83,12 +83,12 @@ export default function Home() {
   const createBlockInSB = (e) => {
     const StoryblokClient = require('storyblok-js-client')
     setIsLoading(true);
-    const newComponent = JSONify(componentList);
+    const component = JSONify(componentList);
     const Storyblok = new StoryblokClient({
       oauthToken: authToken
     })
     Storyblok.post('spaces/'+spaceID+'/components', {
-      component : newComponent 
+      "component": JSON.parse(component)
     })
     .then(response => {
       setExistingSpaceComponents(response.data)
@@ -192,7 +192,7 @@ export default function Home() {
       <div>Space Region: {regionValue == "" ? 'Null' : regionValue} </div>
       <div>Existing components: {existingSpaceComponents.length > 0 ? existingSpaceComponents.map(obj => Object.values(obj)[0] + ", ") : 'None found'} </div>
       <div>Block Name: {blockName == "" ? 'Null' : blockName} </div>
-      <div className="border px-2 py-2 rounded-lg">Block Components:
+      <div className="border px-2 py-2 rounded-lg">JSONify output: <br/>
         {JSONify(componentList)}
       </div></div>
     </main>
